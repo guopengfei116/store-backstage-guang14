@@ -1,7 +1,6 @@
 <template>
     <div>
-        测试
-        <router-view></router-view>
+        登陆
     </div>
 </template>
 
