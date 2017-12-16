@@ -1,0 +1,13 @@
+# 忽略第三包
+node_modules/
+
+# 忽略打包后的代码
+dist/
+
+# 忽略所有的隐藏文件
+.*
+
+# 不忽略babel配置文件与git配置文件
+!.babelrc
+!.gitignore
+
