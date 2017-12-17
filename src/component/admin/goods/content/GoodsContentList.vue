@@ -37,15 +37,16 @@
             <el-table-column width="100" label="市场价" prop="market_price"></el-table-column>
             <el-table-column width="100" label="销售价" prop="sell_price"></el-table-column>
 
-            <!-- 普通列: label用于设置表头, 里面的template可以用于设定任意html结构 -->
+            <!-- 商品状态: label用于设置表头, 里面的template可以用于设定任意html结构 -->
             <el-table-column width="100" label="状态">
                 <!-- 在temoplate里面, 需要通过scope.row拿到每一行数据 -->
                 <template slot-scope="scope">
-                    <i z="is_top"></i>
-                    <i z="is_hot"></i>
-                    <i z="is_slide"></i>
+                    <i :class="['el-icon-upload2', scope.row.is_top? 'active': '']"></i>
+                    <i :class="['el-icon-phone-outline', scope.row.is_hot? 'active': '']"></i>
+                    <i :class="['el-icon-picture', scope.row.is_slide? 'active': '']"></i>
                 </template>
             </el-table-column>
+
             <el-table-column width="100" label="操作">
                 <template slot-scope="scope">
                     <a href="">修改</a>
@@ -134,8 +135,6 @@
                 float: right
             }
         }
-
-
 
         // 分页
         .el-pagination {
