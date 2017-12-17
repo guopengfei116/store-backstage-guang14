@@ -13,7 +13,9 @@
             </el-header>
 
             <!-- 这一块是动态变化的, 将来通过子路由控制 -->
-            <el-main>Main</el-main>
+            <el-main>
+                <router-view></router-view>
+            </el-main>
         </el-container>
     </el-container>
 </template>
