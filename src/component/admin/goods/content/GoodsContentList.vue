@@ -19,7 +19,8 @@
 
             <!-- 右边搜索框 -->
             <div class="list_util_search">
-                <el-input size="small" placeholder="请输入内容" prefix-icon="el-icon-search"></el-input>
+                <!-- 当焦点离开时, 调用接口获取搜索后的数据列表 -->
+                <el-input @blur="getTableList" v-model="query.searchvalue" size="small" placeholder="请输入内容" prefix-icon="el-icon-search"></el-input>
             </div>
         </section>
 
@@ -30,13 +31,24 @@
             <el-table-column type="selection"></el-table-column>
 
             <!-- 普通列: label用于设置表头, prop用于指定该列展示的字段名称 -->
-            <el-table-column label="日期" prop="date"></el-table-column>
+            <el-table-column label="商品名称" prop="title"></el-table-column>
+            <el-table-column width="100" label="所属类别" prop="categoryname"></el-table-column>
+            <el-table-column width="100" label="库存" prop="stock_quantity"></el-table-column>
+            <el-table-column width="100" label="市场价" prop="market_price"></el-table-column>
+            <el-table-column width="100" label="销售价" prop="sell_price"></el-table-column>
 
             <!-- 普通列: label用于设置表头, 里面的template可以用于设定任意html结构 -->
-            <el-table-column label="姓名">
+            <el-table-column width="100" label="状态">
                 <!-- 在temoplate里面, 需要通过scope.row拿到每一行数据 -->
                 <template slot-scope="scope">
-                    <a href="">{{ scope.row.name }}</a>
+                    <i z="is_top"></i>
+                    <i z="is_hot"></i>
+                    <i z="is_slide"></i>
+                </template>
+            </el-table-column>
+            <el-table-column width="100" label="操作">
+                <template slot-scope="scope">
+                    <a href="">修改</a>
                 </template>
             </el-table-column>
         </el-table>
@@ -45,8 +57,8 @@
         <!-- 分页: current-page属性用于设置当前处于第几页, page-size属性用于设置每页条目的可选项 -->
         <!-- 分页: layout用于设置要使用那些分页小组件, total用于设置数据总量 -->
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-            :current-page="1" :page-size="100" :page-sizes="[100, 200, 300, 400]"
-            layout="total, sizes, prev, pager, next, jumper" :total="400">
+            :current-page="query.pageIndex" :page-size="query.pageSize" :page-sizes="[10, 20, 30, 40]"
+            layout="total, sizes, prev, pager, next, jumper" :total="totalcount">
         </el-pagination>
     </div>
 </template>
@@ -55,47 +67,47 @@
     export default {
         data() {
             return {
-                tableList: [
-                    { date: 2017, name: '小美' },
-                    { date: 2016, name: '美美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2017, name: '小美' },
-                    { date: 2016, name: '美美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2017, name: '小美' },
-                    { date: 2016, name: '美美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2017, name: '小美' },
-                    { date: 2016, name: '美美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2017, name: '小美' },
-                    { date: 2016, name: '美美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2017, name: '小美' },
-                    { date: 2016, name: '美美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2017, name: '小美' },
-                    { date: 2016, name: '美美' },
-                    { date: 2015, name: '大美' },
-                    { date: 2015, name: '大美' },
-                ]
+                // 请求接口所需的查询字符串, 在分页组件里也可以修改
+                query: {
+                    pageIndex: 1,
+                    pageSize: 10,
+                    searchvalue: ''
+                },
+                // 数据总量
+                totalcount: 0,
+                // 列表数据
+                tableList: [],
             }
         },
 
         methods: {
-            handleSizeChange() {
-                
+            // 获取商品列表
+            getTableList() {
+                // get方法的第二个参数可以用来指定查询字符串, header头信息等内容
+                this.$http.get(this.$api.gsList, { params: this.query })
+                    .then(rsp => {
+                        this.tableList = rsp.data.message;
+                        this.totalcount = rsp.data.totalcount;
+                    });
             },
-            handleCurrentChange() {
 
+            // 每页数量变化时触发
+            handleSizeChange(pageSize) {
+                this.query.pageSize = pageSize;
+                this.getTableList();
+            },
+
+            // 页码变化时触发
+            handleCurrentChange(pageIndex) {
+                this.query.pageIndex = pageIndex;
+                this.getTableList();
             }
         },
+
+        created() {
+            // 页面一上来就请求接口获取商品列表进展示
+            this.getTableList();
+        }
     }
 </script>
 
