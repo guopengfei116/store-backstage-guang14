@@ -61,15 +61,31 @@
 
         methods: {
 
+            // 登陆
+            login() {
+                // 登陆成功后
+                // 1 判断status是否为0, 不为0给出错误提示
+                // 2 如果为0, 说明登陆成功, 本地localStorage存储后端返回的用户信息
+                // 3 跳转到后台管理首页
+                this.$http.post(this.$api.login, this.user)
+                    .then(rsp => {
+                        let {status, message} = rsp.data; // 解构两个属性值
+                        if(status == 0) {
+                            localStorage.setItem('user', JSON.stringify(message)); // 需要转换为字符串存储
+                            this.$router.push('/');
+                        }else {
+                            alert('哥们你确实逗我呢!')
+                        }
+                    });
+            },
+
             // 点击提交按钮, 调用登陆接口
             submitForm(formName) {
 
                 // 先校验表单, 再提交
                 this.$refs[formName].validate((result) => {
                     if(result) {
-                        // 登陆成功后, 通过params把用户名传递给新页面
-                        this.$http.post(this.$api.login, this.user)
-                            .then(rsp => this.$router.push({ name: 'a', params: { uname: rsp.data.message.uname } }));
+                       this.login();
                     }else {
                         alert('哥们你逗我呢!')
                     }
