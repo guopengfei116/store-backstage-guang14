@@ -1,5 +1,4 @@
 // 导入被路由的组件
-import HomeComponent from '../component/home/Home.vue';
 import LoginComponent from '../component/login/Login.vue';
 import AdminComponent from '../component/admin/Admin.vue';
 
