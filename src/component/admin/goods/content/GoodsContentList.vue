@@ -24,7 +24,8 @@
         </section>
 
         <!-- 表格: data属性为列表数据, 传入后会根据这个数据自动渲染 -->
-        <el-table ref="multipleTable" :data="tableList" tooltip-effect="dark" style="width: 100%">
+        <el-table ref="multipleTable" :data="tableList" tooltip-effect="dark" 
+            style="width: 100%" height="400">
             <!-- 多选框列 -->
             <el-table-column type="selection"></el-table-column>
 
@@ -39,6 +40,14 @@
                 </template>
             </el-table-column>
         </el-table>
+
+        <!-- 分页: size-change用于监听每页展示条目的变化, current-change用于监听页码的变化 -->
+        <!-- 分页: current-page属性用于设置当前处于第几页, page-size属性用于设置每页条目的可选项 -->
+        <!-- 分页: layout用于设置要使用那些分页小组件, total用于设置数据总量 -->
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+            :current-page="1" :page-size="100" :page-sizes="[100, 200, 300, 400]"
+            layout="total, sizes, prev, pager, next, jumper" :total="400">
+        </el-pagination>
     </div>
 </template>
 
@@ -50,17 +59,52 @@
                     { date: 2017, name: '小美' },
                     { date: 2016, name: '美美' },
                     { date: 2015, name: '大美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2017, name: '小美' },
+                    { date: 2016, name: '美美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2017, name: '小美' },
+                    { date: 2016, name: '美美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2017, name: '小美' },
+                    { date: 2016, name: '美美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2017, name: '小美' },
+                    { date: 2016, name: '美美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2017, name: '小美' },
+                    { date: 2016, name: '美美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2017, name: '小美' },
+                    { date: 2016, name: '美美' },
+                    { date: 2015, name: '大美' },
+                    { date: 2015, name: '大美' },
                 ]
+            }
+        },
+
+        methods: {
+            handleSizeChange() {
+                
+            },
+            handleCurrentChange() {
+
             }
         },
     }
 </script>
 
-<style scoped lang="less">
+<style  lang="less">
     .list {
+        // 导航
         .el-breadcrumb {
             padding-bottom: 10px;
-            border-bottom: 1px solid #333333;
+            border-bottom: 1px solid #a6a6a6;
         }
 
         // 防止父盒子坍塌, 所以加overflow
@@ -77,6 +121,14 @@
             &_search {
                 float: right
             }
+        }
+
+
+
+        // 分页
+        .el-pagination {
+            background-color: #fff;
+            padding: 8px;
         }
     }
 </style>
