@@ -24,10 +24,21 @@
     import HeaderComponent from './frame/Header.vue';
 
     export default {
+        data() {
+            return {
+
+            };
+        },
+
+        methods: {
+
+        },
+
+        // 注册子组件, key为组件使用时的标签名, value为对应组件
         components: {
             appAside: AsideComponent,
             appHeader: HeaderComponent,
-        }
+        },
     }
 </script>
 
@@ -35,6 +46,7 @@
     .el-container {
         height: 100%;
 
+        // 左侧高度100%
         .el-aside {
             height: 100%;
             background-color: #D3DCE6;
@@ -42,6 +54,7 @@
             text-align: center;
         }
 
+        // 右侧头部
         .el-header {
             background-color: #B3C0D1;
             color: #333;
@@ -49,6 +62,7 @@
             line-height: 60px;
         }
 
+        // 右侧变化内容
         .el-main {
             background-color: #E9EEF3;
             color: #333;
