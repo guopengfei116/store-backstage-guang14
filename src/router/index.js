@@ -6,7 +6,7 @@ import AdminComponent from '../component/admin/Admin.vue';
 export default {
     routes: [
         // 后台管理首页
-        { name: 'h', path: '/', component: AdminComponent, children: [
+        { name: 'a', path: '/', component: AdminComponent, children: [
             
         ]},
 

@@ -67,8 +67,9 @@
                 // 先校验表单, 再提交
                 this.$refs[formName].validate((result) => {
                     if(result) {
+                        // 登陆成功后, 通过params把用户名传递给新页面
                         this.$http.post(this.$api.login, this.user)
-                            .then(rsp => alert(rsp.data.message.realname));
+                            .then(rsp => this.$router.push({ name: 'a', params: { uname: rsp.data.message.uname } }));
                     }else {
                         alert('哥们你逗我呢!')
                     }
