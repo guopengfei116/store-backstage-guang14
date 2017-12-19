@@ -22,9 +22,14 @@ import api from './js/api_config.js';
 Vue.prototype.$http = axios;
 Vue.prototype.$api = api;
 
+// 导入路由守卫函数, 创建路由实例, 配置守卫做登陆校验
+import routerGuard from './router/guard.js';
+const vueRouter =  new VueRouter(RouterConfig);
+vueRouter.beforeEach(routerGuard);
+
 // 渲染根组件, 启动应用程序
 new Vue({
     el: '#app',
     render: c => c(AppComponent),
-    router: new VueRouter(RouterConfig)
+    router: vueRouter
 });
