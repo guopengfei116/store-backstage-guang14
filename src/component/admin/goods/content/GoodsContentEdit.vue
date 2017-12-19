@@ -8,10 +8,11 @@
             <el-breadcrumb-item>商品编辑</el-breadcrumb-item>
         </el-breadcrumb>
 
-        <!-- Form表单 -->
+        <!-- Form表单: model关联表单数据, rules设置表单校验规则 -->
         <section class="edit_box">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"
             class="edit__form">
+                <!-- 字段如果要进行校验或者重置, 那么必须设置prop属性才可以  -->
                 <el-form-item label="内容标题" prop="title">
                     <el-input v-model="ruleForm.title"></el-input>
                 </el-form-item>
@@ -19,9 +20,10 @@
                     <el-input v-model="ruleForm.sub_title"></el-input>
                 </el-form-item>
                 <el-form-item label="所属类别" prop="category_id">
-                    <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                    <!-- 这个select数据是动态获取的, 需要v-for渲染option -->
+                    <el-select v-model="ruleForm.category_id" placeholder="请选择活动区域">
+                        <!-- 这里label属性设置option提示文本, value属性设置被选时的值 -->
+                        <el-option v-for="item in goodsCategory" :key="item.category_id" :label="item.title" :value="item.category_id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="是否发布" prop="status">
@@ -70,6 +72,7 @@
         data() {
             return {
                 id: this.$route.params.id,
+                // 表单数据
                 ruleForm: {
                     "title":"Hazzys哈吉斯2017新款男士长袖衬衫纯棉修身英伦衬衫显瘦商务衬衣",
                     "sub_title":"英伦轻奢 专柜同款 为不凡而生",
@@ -99,47 +102,62 @@
                         }
                     ]
                 },
+                // 表单校验规则
                 rules: {
-                name: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' },
-                    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-                ],
-                region: [
-                    { required: true, message: '请选择活动区域', trigger: 'change' }
-                ],
-                date1: [
-                    { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-                ],
-                date2: [
-                    { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-                ],
-                type: [
-                    { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-                ],
-                resource: [
-                    { required: true, message: '请选择活动资源', trigger: 'change' }
-                ],
-                desc: [
-                    { required: true, message: '请填写活动形式', trigger: 'blur' }
-                ]
-                }
+                    title: [
+                        { required: true, message: '请输入内容标题', trigger: 'blur' }
+                    ],
+                    sub_title: [
+                        { required: true, message: '请输入副标题', trigger: 'blur' }
+                    ],
+                    goods_no: [
+                        { required: true, message: '请输入商品编号', trigger: 'blur' }
+                    ],
+                    stock_quantity: [
+                        { required: true, message: '请输入库存', trigger: 'blur' }
+                    ],
+                    market_price: [
+                        { required: true, message: '请输入市场价格', trigger: 'blur' }
+                    ],
+                    sell_price: [
+                        { required: true, message: '请输入销售价格', trigger: 'blur' }
+                    ],
+                },
+                // 商品分类
+                goodsCategory: []
             };
         },
         methods: {
+            // 获取商品分类信息, 获取分类的接口多个模块公用一个, 需要通过模块名称进行不同分类请求
+            getGoodsCategory() {
+                this.$http.get(this.$api.ctList + 'goods')
+                    .then(rsp => {
+                        this.goodsCategory = rsp.data.message;
+                    });
+            },
+
             // 获取商品信息, 记得后面加上商品ID参数
             getGoods() {
                 this.$http.get(this.$api.gsDetail + this.id)
-                    .then(rsp => this.ruleForm = rsp.data.message);
+                    .then(rsp => {
+                        // 为了让select能够自动选取默认的值, 把category_id转换为number, 与分类列表的id数据类型一致
+                        rsp.data.message.category_id = +rsp.data.message.category_id;
+                        this.ruleForm = rsp.data.message;
+                    });
             },
 
+            // 修改商品信息, 记得后面加上商品ID参数
+            modifyGoods() {
+                this.$http.post(this.$api.gsEdit + this.id, this.ruleForm)
+                    .then(rsp => this.$alert(rsp.data.message));
+            },
+
+            // 表单提交前先进行校验, 通过后再调用接口修改
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    alert('submit!');
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
+                    if (valid) {
+                        this.modifyGoods();
+                    }
                 });
             },
             resetForm(formName) {
@@ -148,6 +166,7 @@
         },
 
         created() {
+            this.getGoodsCategory();
             this.getGoods();
         }
     }
