@@ -1,18 +1,10 @@
 // 导入被路由的组件
 import LoginComponent from '../component/login/Login.vue';
 import AdminComponent from '../component/admin/Admin.vue';
-// 导入商品相关组件
-import GoodsContentListComponent from '../component/admin/goods/content/GoodsContentList.vue';
-import GoodsContentAddComponent from '../component/admin/goods/content/GoodsContentAdd.vue';
-import GoodsContentEditComponent from '../component/admin/goods/content/GoodsContentEdit.vue';
 
-
-// admin子路由配置
-let adminChildren = [
-    { name: 'gcl', path: 'goods/content/list', component: GoodsContentListComponent },
-    { name: 'gca', path: 'goods/content/add', component: GoodsContentAddComponent },
-    { name: 'gce', path: 'goods/content/edit', component: GoodsContentEditComponent },
-];
+// 导入商品模块路由配置
+import goodsRouterConfig from './goods.js';
+let adminChildren = [ ...goodsRouterConfig ];
 
 // 对外导出路由配置对象
 export default {
