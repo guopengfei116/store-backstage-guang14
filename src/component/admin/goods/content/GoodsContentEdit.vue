@@ -88,7 +88,7 @@
                 </el-form-item>
 
                 <el-form-item label="详细信息" prop="content">
-                    <el-input type="textarea" v-model="ruleForm.content"></el-input>
+                    <quill-editor v-model="ruleForm.content" ></quill-editor>
                 </el-form-item>
 
                 <el-form-item>
@@ -101,6 +101,12 @@
 </template>
 
 <script>
+    // 导入富文本编辑器样式以及组件
+    import 'quill/dist/quill.core.css';
+    import 'quill/dist/quill.snow.css';
+    import 'quill/dist/quill.bubble.css';
+    import { quillEditor } from 'vue-quill-editor';
+
     export default {
         data() {
             return {
@@ -218,6 +224,10 @@
         created() {
             this.getGoodsCategory();
             this.getGoods();
+        },
+
+        components: {
+            quillEditor
         }
     }
 </script>
@@ -233,7 +243,7 @@
         }
 
         &__form {
-            width: 450px;
+            width: 650px;
         }
     }
 </style>
